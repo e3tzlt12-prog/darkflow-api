@@ -17,7 +17,7 @@ API_KEY = "BXosrja5Rfwz9zKUlIgO8VaxdblG_GH9"
 
 @app.get("/scan")
 def scan():
-    url = f"https://api.polygon.io/v3/reference/options/contracts?limit=50&apiKey={API_KEY}"
+    url = f"https://api.polygon.io/v3/reference/options/contracts?limit=50&apiKey={BXosrja5Rfwz9zKUlIgO8VaxdblG_GH9}"
     
     res = requests.get(url)
     data = res.json()
@@ -26,7 +26,7 @@ def scan():
 
     for item in data.get("results", []):
         # فلترة بسيطة (Smart Money تقريبي)
-        if item.get("strike_price", 0) > 100:
+        if item.get("strike_price", 0) > 100 and item.get("contract_type") == "call":
             results.append({
                 "symbol": item.get("ticker"),
                 "type": item.get("contract_type"),
