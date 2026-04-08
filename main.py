@@ -1,25 +1,23 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-import random
+import requests
 
-app = FastAPI()
-
-# ✅ حل مشكلة الاتصال (CORS)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+API_KEY = "BXosrja5Rfwz9zKUlIgO8VaxdblG_GH9"
 
 @app.get("/scan")
 def scan():
-    data = [
-        {"symbol": "TSLA", "type": "CALL", "strike": 381, "volume": "60.9K"},
-        {"symbol": "AMZN", "type": "PUT", "strike": 251, "volume": "80.8K"},
-        {"symbol": "SPXW", "type": "CALL", "strike": 6700, "volume": "9.8K"},
-    ]
+    url = f"https://api.polygon.io/v3/trades/options?limit=50&apiKey={API_KEY}"
+    
+    res = requests.get(url)
+    data = res.json()
 
-    random.shuffle(data)
-    return data
+    results = []
+
+    for trade in data.get("results", []):
+        if trade.get("size", 0) > 100:  # فلتر حجم
+            results.append({
+                "symbol": trade.get("ticker"),
+                "type": "CALL/PUT",
+                "strike": "?",
+                "volume": trade.get("size")
+            })
+
+    return results
