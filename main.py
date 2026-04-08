@@ -17,7 +17,7 @@ API_KEY = "BXosrja5Rfwz9zKUlIgO8VaxdblG_GH9"
 
 @app.get("/scan")
 def scan():
-    url = f"https://api.polygon.io/v3/reference/options/contracts?limit=50&apiKey={BXosrja5Rfwz9zKUlIgO8VaxdblG_GH9}"
+    url = f"https://api.polygon.io/v3/reference/options/contracts?limit=50&apiKey={API_KEY}"
     
     res = requests.get(url)
     data = res.json()
